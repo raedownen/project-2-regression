@@ -18,7 +18,7 @@ def get_db_url(db, user=user, host=host, password=password):
 def new_zillow_data():
     '''This function reads in zillow data from Codeup database.'''
     sql_query = '''    
-    SELECT properties_2017.bedroomcnt,properties_2017.bathroomcnt,
+    SELECT properties_2017.fips,properties_2017.bedroomcnt,properties_2017.bathroomcnt,
     properties_2017.calculatedfinishedsquarefeet,properties_2017.taxvaluedollarcnt
     FROM predictions_2017
     JOIN properties_2017
@@ -65,19 +65,30 @@ def prep_zillow_data(df):
                           "taxvaluedollarcnt": "home_value",})
 
     # Remove outliers
+    df = df[df.bathrooms > 0]
     df = df[df.bathrooms <= 5]
-    df = df[df.bedrooms <= 5] 
+    df = df[df.bedrooms > 0]
+    df = df[df.bedrooms <= 5]
     df = df[df.home_value < 1_000_000]
     df = df[df.squarefeet < 5000]
     
+    # Convert binary categorical variables to numeric
+    df['fips_encoded'] = df.fips.map({6037:1, 6059:2, 6111:3})
+   
+    
+   
     
     return df
 
 #################################################################################
 def split_zillow_data(df):
     '''
-    This function performs split on zillow data
-    Returns train, validate, and test dfs.
+    This function performs split on zillow data.  Purpose of the train, validate, test is to split a dataframe.  
+    The train dataset is for training our models. We also perform our exploratory data analysis on train.  
+    The validate dataset serves two purposes. First, it is an "out of sample" dataset so that we can evaluate our models 
+    on unseen data to measure how well the model generalizes. Second, the validate set allows us to fine tune 
+    our hyperparameters.  The test dataset is our final out of sample dataset used to evaluate how well the models 
+    tuned on validate generalize on unseen data. Returns train, validate, and test dfs.
     '''
     train_validate, test = train_test_split(df, test_size=.2, 
                                         random_state=123)
