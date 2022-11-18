@@ -74,6 +74,8 @@ def prep_zillow_data(df):
     
     # Convert binary categorical variables to numeric
     df['fips_encoded'] = df.fips.map({6037:1, 6059:2, 6111:3})
+    
+    df.drop(columns=['fips'], inplace=True)
    
     
    
