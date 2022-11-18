@@ -18,15 +18,18 @@ def get_db_url(db, user=user, host=host, password=password):
 def new_zillow_data():
     '''This function reads in zillow data from Codeup database.'''
     sql_query = '''    
-    SELECT properties_2017.fips,properties_2017.bedroomcnt,properties_2017.bathroomcnt,
-    properties_2017.calculatedfinishedsquarefeet,properties_2017.taxvaluedollarcnt
-    FROM predictions_2017
-    JOIN properties_2017
-    ON predictions_2017.parcelid = properties_2017.parcelid
-    JOIN propertylandusetype
-    ON properties_2017.propertylandusetypeid = propertylandusetype.propertylandusetypeid
-    WHERE propertylandusetype.propertylandusetypeid = '261'
-    AND predictions_2017.transactiondate between '2017-01-01' AND '2017-12-31';'''
+    SELECT properties_2017.fips,
+        properties_2017.bedroomcnt,
+        properties_2017.bathroomcnt,
+        properties_2017.calculatedfinishedsquarefeet,
+        properties_2017.taxvaluedollarcnt
+        FROM predictions_2017
+        JOIN properties_2017
+        ON predictions_2017.parcelid = properties_2017.parcelid
+        JOIN propertylandusetype
+        ON properties_2017.propertylandusetypeid = propertylandusetype.propertylandusetypeid
+        WHERE propertylandusetype.propertylandusetypeid = '261'
+        AND predictions_2017.transactiondate between '2017-01-01' AND '2017-12-31';'''
 
     # Read in DataFrame from Codeup db.
     df = pd.read_sql(sql_query, get_db_url('zillow'))
