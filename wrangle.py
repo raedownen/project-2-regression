@@ -147,6 +147,7 @@ def scale_data(train,
         return train_scaled, validate_scaled, test_scaled
     
 ################################################## viz scaler############################################################
+# allows you to see before and after scaling of data
 def visualize_scaler(scaler, df, columns_to_scale, bins=10):
     fig, axs = plt.subplots(len(columns_to_scale), 2, figsize=(16,9))
     df_scaled = df.copy()
@@ -159,7 +160,7 @@ def visualize_scaler(scaler, df, columns_to_scale, bins=10):
     plt.tight_layout()
 #return fig, axs
 ##########################
-
+#Used in final report to get needed info 
 def wrangle_zillow():
     df=get_zillow_data()
     df=prep_zillow_data(df)
