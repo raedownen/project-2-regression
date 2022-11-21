@@ -16,19 +16,22 @@ Objectives
 •	Make recommendations to a data science team about how to improve predictions.
 •	Refine your work into a report, in the form of a jupyter notebook, that you will walk through in a 5-minute presentation to a group of colleagues and managers about your goals, the work you did, why, what you found, your methodologies, and your conclusions.
 •	Be prepared to answer panel questions about your code, process, findings and key takeaways, and model.
-•	Project description- Scenario-You are a junior data scientist on the Zillow data science team and receive the following email in your inbox:
+•	
+
+Project description- Scenario-You are a junior data scientist on the Zillow data science team and receive the following email in your inbox:
 We want to be able to predict the property tax assessed values ('taxvaluedollarcnt') of Single-Family Properties that had a transaction during 2017.
 We have a model already, but we are hoping your insights can help us improve it. I need recommendations on a way to make a better model. Maybe you will create a new feature out of existing ones that works better, try a non-linear regression algorithm, or try to create a different model for each county. Whatever you find that works (or doesn't work) will be useful. Given you have just joined our team, we are excited to see your outside perspective.
 One last thing, Maggie lost the email that told us where these properties were located. Ugh, Maggie :-/. Because property taxes are assessed at the county level, we would like to know what states and counties these are located in.
 -- The Zillow Data Science Team
 •	Project planning (lay out your process through the data science pipeline)
 •	 Planning-I reviewed the data using MySQL to determine what columns should I use and on what key I needed to join the 3 tables.  
-•	Acquisition- I used properties that had a transaction in 2017.  I noticed that there was an observation that needed to be deleted because the transaction was in 2018. So, I acquired 52441observations instead of 52442.  I used the 3 tables, properties_2017, predictions_2017, and propertylandusetype, to bring in single family residences.
+•	Acquisition- I used properties that had a transaction in 2017.  I noticed that there was an observation that needed to be deleted because the transaction was in 2018. So, I acquired 52441 observations instead of 52442.  I used the 3 tables, properties_2017, predictions_2017, and propertylandusetype, to bring in single family residences.
 •	Preparation- I used only square feet of the home, number of bedrooms, and number of bathrooms to estimate the property's assessed value, taxvaluedollarcnt, and fips. I removed fields that would cause data leakage. I removed observations where there was a null or zero for either bedrooms or bathrooms.  
 •	Exploration and Pre-processing
-•	Modeling
-•	Delivery
-•	Initial hypotheses and/or questions you have of the data, ideas
+Exploration
+• Used Spearmans to see correlation
+•	Modeling- I used 5 models, OLS, Poly (2nd and 3rd degree), LassoLars, and Tweedie.
+•	Initial hypotheses and/or questions you have of the data.  H0- The target variable, property tax assessed values ('taxvaluedollarcnt'), of Single Family Properties that had a transaction during 2017 will not be predictable (attributable to any influencing factors) using variables in the dataset. • HA- The target variable, property tax assessed values ('taxvaluedollarcnt'), of Single Family Properties that had a transaction during 2017 will be predictable (attributable to any influencing factors) using variables in the dataset.
 •	Data dictionary
 bathroomcnt- Number of bathrooms in home including fractional bathrooms 
 bedroomcnt- Number of bedrooms in home
@@ -40,8 +43,6 @@ fips- Federal Information Processing Standard code
 	the 3 counties represented are Orange, LA, and Ventura
 parcelid- Unique identifier for parcels (lots)
 
-•	Instructions or an explanation of how someone else can reproduce your project and findings (What would someone need to be able to recreate your project on their own?)
-•	Key findings, recommendations, and takeaways from your project.
 DATA SCIENCE PIPELINE
 
 Planning
@@ -71,53 +72,3 @@ How to get there:
 •	If the data source is SQL, you may need to do some clean-up, integration, aggregation or other manipulation of data in the SQL environment before reading the data into your python environment.
 •	Using the Python library pandas, acquire the data into a dataframe using a function that reads from your source type, such as pandas.read_csv for acquiring data from a csv.
 
-Preparation
-AKA Data Tidying, Data Cleansing, Data Wrangling (Acquisition + Prep)
-The goal is to have data, split into 3 samples (train, validate, and test), in a format that can easily be explored, analyzed and visualized. The data is split so that we have a sample we can use to test our final model, one that was not used in the exploration of the data or the development of the model. This helps us understand the generality of the model.
-The deliverable is a file, prep.py, that contains the function(s) needed to reproduce the preparation of the data. The resulting dataframes should be 3 samples, a dataframe for training the algorithms, a dataframe for validating the models developed on unseen data, a dataframe for testing the best performing model to ensure the model is able to be generalized on a final set of unseen data not 'overfitting' train, a validate and a test, roughly a 70%:20%:10% split (or somewhere between that and 50%:30%:20% ... depends on amount of data available).
-•	The train dataset is for training our models. We also perform our exploratory data analysis on train.
-•	The validate dataset serves two purposes. First, it is an "out of sample" dataset so that we can evaluate our models on unseen data to measure how well the model generalizes. Second, the validate set allows us to fine tune our hyperparameters.
-•	The test dataset is our final out of sample dataset used to evaluate how well the models tuned on validate generalize on unseen data.
-How to get there:
-•	Python libraries: pandas, matplotlib, seaborn, scikit-learn.
-•	Use pandas to perform tasks such as handling null values, outliers, normalizing text, binning of data, changing data types, etc.
-•	Use matplotlib or seaborn to plot distributions of numeric attributes and target.
-•	Use scikit-learn to split the data into train and test samples.
-Exploration and Pre-processing
-AKA Exploratory Analysis/visualization, Feature Engineering, Feature Selection
-The goal is to discover features that have the largest impact on the target variable, i.e. provide the most information gain, drive the outcome.
-The deliverable is a file, preprocess.py, that contains the function(s) needed to reproduce the pre-processing of the data. The dataframe resulting from these functions should be one that is pre-processed, i.e. ready to be used in modeling. This means that attributes are reduced to features, features are in a numeric form, there are no missing values, and continuous and/or ordered values are scaled to be unitless.
-How to get there:
-•	Use python libraries: pandas, statsmodels, scipy, numpy, matplotlib, seaborn, scikit-learn.
-•	Perform statistical testing to understand correlations, significant differences in variables, variable interdependencies, etc.
-•	Create visualizations that demonstrate relationships across and within attributes and target.
-•	Use domain knowledge and/or information gained through exploration to construct new features.
-•	Remove features that are noisy, provide no valuable or new information, or are redundant.
-•	Use scikit-learn's preprocessing algorithms (feature selection, feature engineering, dummy variables, binning, clustering, e.g.) to turn attributes into features.
-Modeling
-The goal is to create a robust and generalizable model that is a mapping between features and a target outcome.
-The deliverable is a file, model.py, that contains functions for training the model (fit), predicting the target on new data, and evaluating results.
-How to get there:
-•	Python libraries: scikit-learn
-•	Identify regression, classification, cross validation, and/or other algorithms that are most appropriate.
-•	Build your model:
-•	Create the model object.
-•	Fit the model to your training, or in-sample, observations.
-•	Predict the target value on your training observations.
-•	Evaluate results on the in-sample predictions.
-•	Repeat as necessary with other algorithms or hyperparameters.
-•	Using the best performing model, predict on test, out-of-sample, observations.
-•	Evaluate results on the out-of-sample predictions.
-Delivery
-The goal is to enable others to use what you have learned or developed through all the previous stages.
-The deliverable could be of various types:
-•	A pipeline.py file that takes new observations from acquisition to prediction using the previously built functions.
-•	A fully deployed model.
-•	A reproducible report and/or presentation with recommendations of actions to take based on original project goals.
-•	Predictions made on a specific set of observations.
-•	A dashboard for observing/monitoring the key drivers, or features, of the target variable.
-How to get there:
-•	Python sklearn's pipeline method.
-•	Tableau for creating a report, presentation, story, or dashboard.
-•	Jupyter notebook for creating a report or a framework to reproduce your research, e.g.
-•	Flask to build a web server that provides a gateway to our model's predictions.
